@@ -153,8 +153,8 @@ Status ListInsert(SqList &L, int i, ElemType e)
         if (L.length >= L.listsize)
             return ERROR;
         for (int j = L.listsize; j > i; j--)
-            L.elem[j-1] = L.elem[j - 1-1];
-        L.elem[i-1] = e;
+            L.elem[j - 1] = L.elem[j - 1 - 1];
+        L.elem[i - 1] = e;
         L.length++;
         return OK;
     }

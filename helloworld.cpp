@@ -1,3 +1,4 @@
+
 // VS Code C/C++ 测试代码 "Hello World"
 // 由 VSCodeConfigHelper v4.0.2 生成
 
@@ -8,7 +9,6 @@
 // 按下 Ctrl + Shift + B 编译。
 
 # include <iostream>
-
 int main() {
     // 在标准输出中打印 "Hello, world!"
     std::cout << "Hello, world!" << std::endl;
