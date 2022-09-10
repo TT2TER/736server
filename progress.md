@@ -50,7 +50,24 @@ curl ip.gs
 
 # 设置来电自启动
 
+"Advanced"---"SuperIO Configuration"---"Restore on AC Power Loss by IO"
+
+有三个选项Power Off（默认）/Power ON/Last State改成Power ON在电脑通电时就自动
+开机了。
+
+每种BIOS都不完全相同，只要我们找到类似POWER ON/Restore ON这类改成ON就可以了。
+
 # 安装codeserver服务
+使用官方脚本安装
+
+配置c、c++环境请先在本机装Linux版本的vscode
+
+然后使用自动配置脚本[按照这个设置](https://v4.vscch.tk/)
+
+配置好后请在codeserver中将插件安装好
+
+有不能安装的插件请通过官网加载并且从vsix安装
+
 
 ## 安装docker docker-compose portainer
 ### 安装 docker docker-compose
@@ -61,6 +78,6 @@ curl ip.gs
 注意配置非root用户组，配置自启动
 
 ### 安装portainer
-
 请完全按照[官方文档](https://docs.portainer.io/start/install)安装
 # 自动汇报端口
+使用DDNS－GO 在docker中并且设置钉钉bot来汇报当前的ip地址
