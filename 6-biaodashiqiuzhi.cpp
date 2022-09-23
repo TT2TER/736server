@@ -5,18 +5,13 @@
 #include <cmath>
 
 using namespace std;
-#define MAX 9999999
 struct Ret
 {
     int num;
     bool m; // n/y
-} ;
-
-int figure[100];  //存入数字
-char symbol[100]; //存入操作符
-//下标
-int topf = -1;
-int tops = -1;
+};
+stack<int> num;
+stack<char> sig;
 //一起用来定位优先顺序
 char operation[9] =
     {'+', '-', '*', '/', '(', ')', '#', '^', '%'};
@@ -31,29 +26,9 @@ char checklist[9][9] = {
     {'>', '>', '>', '>', '<', '>', '>', '<', '>'},
     {'>', '>', '>', '>', '<', '>', '>', '<', '>'}};
 
-int number(char *q)
+int char2num(char *q)
 {
     return (int)(*q - '0');
-}
-
-void push_figure(int q)
-{
-    figure[++topf] = q;
-}
-
-void push_symbol(char ch)
-{
-    symbol[++tops] = ch;
-}
-
-int pop_figure()
-{
-    return figure[topf--];
-}
-//取出刚刚存入的这个符号
-char pop_symbol()
-{
-    return symbol[tops--];
 }
 
 char compare(char x, char y)
@@ -134,74 +109,82 @@ Ret operate(int x, int y, char symbol)
     return ret;
 }
 
-int main(int argc, char *argv[])
+int main()
 {
     int n;
     int flag; //数字0，（ 为1，其他2
-    char expression[100], *p, *negative;
-    char firstnega = '0';
+    char expr[100], *p, *nega;
+    char fnega = '0';
 
-    // freopen("file.txt","r",stdin);
     scanf("%d", &n);
 
     while (n--)
     {
-        flag = 2;
-        memset(expression, '\0', 100);
-        scanf("%s", expression);
+        while (!num.empty())
+        {
+            num.pop();
+        }
+        while (!sig.empty())
+        {
+            sig.pop();
+        }
 
-        strcat(expression, "#");
-        p = expression;
-        negative = expression;
+        flag = 2;
+        memset(expr, '\0', 100);
+        scanf("%s", expr);
+
+        strcat(expr, "#");
+        p = expr;
+        nega = expr;
 
         // 第一个符号是负数号且第二个字符是数字
         // 把负数号替换为0
-        //指针操作，原来的也会被修改
-        if (*negative == '-' && *(negative + 1) == '(')
-        { //这种情况  -(2+2)+1 直接在figure中插入一个0
-            push_figure(number(&firstnega));
+        if (*nega == '-' && *(nega + 1) == '(')
+        { //型如-(2+2)+1 直接在num.stack中插入一个0
+            num.push(char2num(&fnega));
         }
 
-        if (*negative == '-' && *(negative + 1) >= '0' && *(negative + 1) <= '9')
+        if (*nega == '-' && *(nega + 1) >= '0' && *(nega + 1) <= '9')
         {
-            *negative = '0';
+            *nega = '0';
         }
-        negative++;
+        nega++;
         // 遍历每一个字符
-        // 前一个字符不是数字，这个字符是“-”号
-        // 就把这个字符替换为0
-        for (; *negative != '\0'; negative++)
+        for (; *nega != '\0'; nega++)
         {
-            if ((*(negative - 1) < '0' || *(negative - 1) > '9') && (*negative == '-') && *(negative - 1) != ')')
+            if ((*(nega - 1) < '0' || *(nega - 1) > '9') && (*nega == '-') && *(nega - 1) != ')')
             {
-                *negative = '0';
+                *nega = '0';
             }
         }
-        //在栈symbol中插入#
-        push_symbol('#');
+        sig.push('#');
         int dead = 0;
-        while (*p != '#' || symbol[tops] != '#')
+        while (*p != '#' || sig.top() != '#')
         {
-            // 遇到数字
             if (*p >= '0' && *p <= '9')
             {
                 if (flag == 0)
                 {
-                    //如果之前有负数的符号的话会改为0，然后0在这里作为判断标志在figure里面存入负数
-                    if (figure[topf] <= 0)
-                        push_figure(pop_figure() * 10 + number(p++) * (-1));
+                    if (num.top() <= 0)
+                    {
+                        int q = num.top();
+                        num.pop();
+                        num.push((q * 10 + char2num(p++) * (-1)));
+                    }
                     else
-                        push_figure(pop_figure() * 10 + number(p++));
+                    {
+                        int q = num.top();
+                        num.pop();
+                        num.push(q * 10 + char2num(p++));
+                    }
                 }
                 else
-                    push_figure(number(p++));
-                //说明已经插入过数字了,注意是一位一位的插入
+                    num.push(char2num(p++));
                 flag = 0;
             }
-            //不是数字
             else
             {
-                //考虑的是（+这种情况
+                //（+
                 if (flag == 1)
                 {
                     if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '%' || *p == '^')
@@ -213,7 +196,7 @@ int main(int argc, char *argv[])
                         }
                     }
                 }
-                //扫描到左括号时这种情况标记为1
+                //左括号标记为1
                 if (*p == '(')
                 {
                     flag = 1;
@@ -221,7 +204,7 @@ int main(int argc, char *argv[])
                 else
                     flag = 2;
 
-                if (tops == -1)
+                if (sig.empty())
                 {
                     printf("error.\n");
                     {
@@ -231,8 +214,9 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    char ch = pop_symbol(), ans;
-                    // 把现在扫描到的这个符号和刚刚存入的那个操作符进行优先级比较
+                    char ch = sig.top(), ans;
+                    sig.pop();
+                    //优先级比较
                     ans = compare(ch, *p);
                     if (ans == ' ')
                     {
@@ -242,27 +226,25 @@ int main(int argc, char *argv[])
                             break;
                         }
                     }
-                    //优先级小，将其存入
                     else if (ans == '<')
                     {
-                        push_symbol(ch); //把取出来的重新存进去
-                        push_symbol(*p++);
+                        sig.push(ch); 
+                        sig.push(*p++);
                         continue;
                     }
-                    // 优先级相同，tops指向上一位不变动，直接扫描下一个p，待会插入时直接覆盖掉（
+                    
                     else if (ans == '=')
                     {
-
                         p++;
                         continue;
                     }
                     else
                     {
-                        //对x,y,ch进行运算，并将数字存进
-
                         int integer_x, integer_y;
-                        integer_y = pop_figure();
-                        integer_x = pop_figure();
+                        integer_y = num.top();
+                        num.pop();
+                        integer_x = num.top();
+                        num.pop();
                         Ret judge = operate(integer_x, integer_y, ch);
                         if (judge.m == false)
                         {
@@ -270,23 +252,19 @@ int main(int argc, char *argv[])
                             break;
                         }
                         else
-                            push_figure(judge.num);
+                            num.push(judge.num);
                         continue;
                     }
                     p++;
                 }
             }
         }
-        if (!dead && topf == 0 && tops == 0)
-            printf("%d\n", figure[topf]);
+        if (!dead && num.size() == 1 && sig.size() == 1)
+            printf("%d\n", num.top());
         else if (!dead)
         {
             printf("error.\n");
         }
-        // 初始化，重新开始新的算式运算
-        memset(expression, '\0', 100);
-        topf = -1;
-        tops = -1;
     }
     return 0;
 }
