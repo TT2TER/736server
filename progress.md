@@ -47,7 +47,7 @@ curl ip.gs
 ```
 
 # 去掉图形化界面启动（减少内存占用）
-
+https://blog.csdn.net/inthat/article/details/107140558
 # 设置来电自启动
 
 "Advanced"---"SuperIO Configuration"---"Restore on AC Power Loss by IO"
