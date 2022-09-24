@@ -4,7 +4,7 @@
 
 ## 综述
 [Understanding and Creating Art with AI: Review and Outlook](./kuaizhao/Understanding%20and%20Creating%20Art%20with%20AI_%20Review%20and%20Outlook%20_%20ACM%20Transactions%20on%20Multimedia%20Computing%2C%20Communications%2C%20and%20Applications%20(2022_9_23%2022_15_57).html)
-[中文介绍：AI 绘画何以突飞猛进? 从历史到技术突破, 一文读懂火爆的 AI 绘画发展史](https://www.ithome.com/0/641/931.htm)
+[中文介绍：AI 绘画何以突飞猛进? 从历史到技术突破, 一文读懂火爆的 AI 绘画发展史](https://www.ithome.com/0/641/931.htm) 他，
 ## demo介绍
 [我给梵高当 Tony：这三款 AI 绘图工具，就离谱](https://36kr.com/p/1789060852822404)
 
