@@ -10,7 +10,6 @@
           "-pedantic",
           "-Wall",
           "-Wextra",
-          "-Werror",
           "-std=c++23"
         ],
         "command": "/usr/bin/g++",
